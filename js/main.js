@@ -5,7 +5,8 @@
   var DEFAULTS = { owner: "kabuleang", repo: "vocaloid-cover-hall" };
   var SETTINGS_KEY = "vsong_gh_settings_v1";
   var LIKE_KEY = "vsong_likes_v2";
-  var MAX_FILE = 25 * 1024 * 1024; // 25MB
+  var MAX_COVER_FILE = 25 * 1024 * 1024;  // 封面 ≤ 25MB
+  var MAX_AUDIO_FILE = 100 * 1024 * 1024; // 音频 ≤ 100MB
   var RAW_BASE = "https://raw.githubusercontent.com";
   var API_BASE = "https://api.github.com";
   var WORKS_PATH = "works/works.json";
@@ -530,8 +531,8 @@
   function validateFiles(coverFile, audioFile) {
     if (coverFile && coverFile.type && coverFile.type.indexOf("image") !== 0) return "封面请选择图片文件";
     if (audioFile && audioFile.type && audioFile.type.indexOf("audio") !== 0) return "音频请选择 MP3 / WAV 文件";
-    if (coverFile && coverFile.size > MAX_FILE) return "封面文件超过 25MB 上限";
-    if (audioFile && audioFile.size > MAX_FILE) return "音频文件超过 25MB 上限";
+    if (coverFile && coverFile.size > MAX_COVER_FILE) return "封面文件超过 25MB 上限";
+    if (audioFile && audioFile.size > MAX_AUDIO_FILE) return "音频文件超过 100MB 上限";
     return "";
   }
 
@@ -711,7 +712,7 @@
     });
     els.fAudio.addEventListener("change", function () {
       var f = els.fAudio.files[0];
-      els.audioText.textContent = f ? "已选择：" + f.name + (f.size > MAX_FILE ? "（超过 25MB！）" : "") : "上传音频（MP3 / WAV）";
+      els.audioText.textContent = f ? "已选择：" + f.name + (f.size > MAX_AUDIO_FILE ? "（超过 100MB！）" : "") : "上传音频（MP3 / WAV）";
       els.audioText.parentElement.classList.toggle("has-file", !!f);
     });
 
