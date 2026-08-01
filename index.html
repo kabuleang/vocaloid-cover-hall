@@ -43,20 +43,11 @@
       <div class="hero-inner container">
         <p class="hero-eyebrow"><span class="dot"></span>个人翻唱作品 · 展示 / 试听 / 编辑</p>
         <h1 class="hero-title">让每一首翻唱<br /><span class="grad">都有回响</span></h1>
-        <p class="hero-sub">用 Synthesizer V、ACE Studio 等编辑器创作的翻唱作品，在这里统一上传、试听与编辑。封面与音频持久保存在 GitHub 仓库，公开分享给每一位访客。</p>
         <div class="hero-actions">
           <a class="btn btn-primary" href="#works">浏览作品</a>
           <button class="btn btn-ghost upload-btn" id="heroUploadBtn">上传作品</button>
         </div>
-        <div class="hero-stats">
-          <div class="stat"><b data-stat="songs">0</b><span>收录作品</span></div>
-          <div class="stat"><b data-stat="editors">0</b><span>使用编辑器</span></div>
-          <div class="stat"><b data-stat="genres">0</b><span>音乐风格</span></div>
-          <div class="stat"><b data-stat="favs">0</b><span>本机收藏</span></div>
-        </div>
       </div>
-      <div class="hero-eq" id="heroEq" aria-hidden="true"></div>
-      <div class="float-notes" id="floatNotes" aria-hidden="true"></div>
     </section>
 
     <!-- 作品展厅 -->
@@ -64,7 +55,7 @@
       <div class="container">
         <div class="section-head reveal">
           <h2>作品展厅</h2>
-          <p>上传你的翻唱作品（封面 + MP3/WAV），作品将保存到 GitHub 仓库并在这里公开展示。</p>
+          <p>欢迎收听我制作的翻唱作品，点击卡片即可播放。</p>
         </div>
 
         <div class="toolbar reveal">
@@ -88,7 +79,7 @@
         <div class="empty" id="emptyState">
           <p class="empty-icon">♬</p>
           <h3 id="emptyTitle">作品展厅还是空的</h3>
-          <p id="emptyDesc">上传你的第一首翻唱作品（封面 + MP3/WAV），作品会公开保存到 GitHub 仓库。</p>
+          <p id="emptyDesc">还没有翻唱作品，敬请期待。</p>
           <button class="btn btn-primary upload-btn" id="emptyUploadBtn">＋ 上传第一首作品</button>
         </div>
 
@@ -101,33 +92,50 @@
       </div>
     </section>
 
+    <!-- 快捷入口 -->
+    <section class="quick section" id="quickActions">
+      <div class="container">
+        <div class="quick-grid">
+          <a class="quick-block" href="#works">
+            <span class="quick-icon">♪</span>
+            <h3>浏览作品</h3>
+            <p>查看并试听全部翻唱作品</p>
+          </a>
+          <button class="quick-block upload-btn" type="button">
+            <span class="quick-icon">＋</span>
+            <h3>上传作品</h3>
+            <p>上传新的翻唱音频与封面</p>
+          </button>
+        </div>
+      </div>
+    </section>
+
     <!-- 关于平台 -->
     <section class="about section" id="about">
       <div class="container">
         <div class="section-head reveal">
-          <h2>关于平台</h2>
-          <p>一个把作品数据直接存进 GitHub 仓库的个人翻唱展示空间。</p>
+          <h2>关于</h2>
+          <p>这里是我的翻唱作品小站，不定期更新。</p>
         </div>
         <div class="about-grid">
           <article class="about-card reveal">
-            <span class="about-icon">♻</span>
-            <h3>GitHub 存储</h3>
-            <p>上传的封面与音频会通过 GitHub API 写入仓库，公开持久保存——换设备、清缓存都不丢。</p>
-          </article>
-          <article class="about-card reveal">
             <span class="about-icon">♪</span>
-            <h3>站内试听</h3>
-            <p>支持上传 MP3 / WAV，点击卡片即可在站内直接播放，无需跳转任何外部平台。</p>
+            <h3>自制翻唱</h3>
+            <p>每首作品都经过用虚拟歌手编辑器制作与混音，欢迎收听。</p>
           </article>
           <article class="about-card reveal">
-            <span class="about-icon">✎</span>
-            <h3>自由编辑</h3>
-            <p>随时修改作品信息、替换封面与音频或删除作品，保存后立即同步到仓库。</p>
+            <span class="about-icon">▶</span>
+            <h3>站内试听</h3>
+            <p>点击卡片即可在站内直接播放，无需跳转任何外部平台。</p>
+          </article>
+          <article class="about-card reveal">
+            <span class="about-icon">♬</span>
+            <h3>持续更新</h3>
+            <p>会不定期上传新的翻唱作品，敬请期待。</p>
           </article>
         </div>
         <div class="about-note reveal">
-          <p><strong>使用说明：</strong>访客无需任何配置即可浏览与试听；上传 / 编辑 / 删除需要你先在右上角“设置”中填写 GitHub 访问令牌（仅授权本仓库 Contents 读写权限）。令牌只保存在当前浏览器，不会写入网站代码。</p>
-          <p style="margin-top:8px"><strong>版权声明：</strong>请上传你拥有相应授权或自行制作的翻唱作品；作品与音频在 GitHub 仓库中公开可见。</p>
+          <p><strong>版权声明：</strong>本小站作品均为自制翻唱，版权归原曲词曲作者所有。</p>
         </div>
       </div>
     </section>
@@ -136,7 +144,6 @@
   <footer class="site-footer">
     <div class="container">
       <p class="foot-brand">♪ 声之回响</p>
-      <p>作品与音频保存在 GitHub 仓库 · 管理操作需配置访问令牌</p>
       <p class="foot-links">
         <a href="#top">回到顶部</a>
         <span>·</span>

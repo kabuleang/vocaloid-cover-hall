@@ -5,6 +5,7 @@
   var DEFAULTS = { owner: "kabuleang", repo: "vocaloid-cover-hall" };
   var SETTINGS_KEY = "vsong_gh_settings_v1";
   var LIKE_KEY = "vsong_likes_v2";
+  var PLAY_KEY = "vsong_plays_v1";
   var MAX_COVER_FILE = 25 * 1024 * 1024;  // 封面 ≤ 25MB
   var MAX_AUDIO_FILE = 100 * 1024 * 1024; // 音频 ≤ 100MB
   var WARN_AUDIO_FILE = 50 * 1024 * 1024; // 超过 50MB 提前警告（GitHub 实际处理大文件不稳定）
@@ -18,6 +19,7 @@
     genre: "all",
     sort: "newest",
     likes: loadLikes(),
+    plays: loadPlays(),
     settings: loadSettings(),
     works: [],
     editingId: null,
@@ -80,6 +82,13 @@
   function saveLikes() {
     try { localStorage.setItem(LIKE_KEY, JSON.stringify(state.likes)); } catch (e) { /* ignore */ }
   }
+  function loadPlays() {
+    try { return JSON.parse(localStorage.getItem(PLAY_KEY)) || {}; }
+    catch (e) { return {}; }
+  }
+  function savePlays() {
+    try { localStorage.setItem(PLAY_KEY, JSON.stringify(state.plays)); } catch (e) { /* ignore */ }
+  }
   function loadSettings() {
     var s = { owner: DEFAULTS.owner, repo: DEFAULTS.repo, token: "" };
     try {
@@ -101,6 +110,14 @@
     });
   }
   function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+  function fmt(n) {
+    n = Number(n) || 0;
+    if (n >= 10000) {
+      var v = (n / 10000).toFixed(1).replace(/\.0$/, "");
+      return v + " 万";
+    }
+    return String(n);
+  }
   function fmtDuration(sec) {
     if (!sec || !isFinite(sec) || sec <= 0) return null;
     var m = Math.floor(sec / 60);
@@ -342,7 +359,8 @@
           (w.original ? '<span class="card-original">原曲：' + esc(w.originalArtist || "") + "《" + esc(w.original) + "》</span>" : "") + "</p>" +
           '<div class="card-tags">' + tags + "</div>" +
           '<div class="card-foot">' +
-            (w.duration ? "<span>时长 " + esc(w.duration) + "</span>" : "<span>暂无音频</span>") +
+            '<span class="card-plays">▶ 点击 ' + fmt(state.plays[w.id] || 0) + "</span>" +
+            (w.duration ? "<span>" + esc(w.duration) + "</span>" : "") +
             '<span class="year">' + (w.year || "—") + "</span>" +
           "</div>" +
         "</div>" +
@@ -405,36 +423,6 @@
     }).join("");
   }
 
-  function renderStats() {
-    var editorSet = {}, genreSet = {};
-    state.works.forEach(function (w) {
-      if (w.editor) editorSet[w.editor.toLowerCase()] = true;
-      (w.genre || []).forEach(function (g) { genreSet[g] = true; });
-    });
-    var favs = 0;
-    Object.keys(state.likes).forEach(function (id) {
-      if (state.likes[id] && state.works.some(function (w) { return w.id === id; })) favs++;
-    });
-    countUp(document.querySelector('[data-stat="songs"]'), state.works.length, null);
-    countUp(document.querySelector('[data-stat="editors"]'), Object.keys(editorSet).length, null);
-    countUp(document.querySelector('[data-stat="genres"]'), Object.keys(genreSet).length, null);
-    countUp(document.querySelector('[data-stat="favs"]'), favs, null);
-  }
-
-  function countUp(el, target, formatter) {
-    if (!el) return;
-    var dur = 900, start = null;
-    function step(ts) {
-      if (!start) start = ts;
-      var p = Math.min((ts - start) / dur, 1);
-      var eased = 1 - Math.pow(1 - p, 3);
-      var val = Math.round(target * eased);
-      el.textContent = formatter ? formatter(val) : String(val);
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
-
   /* ---------- 详情弹窗 ---------- */
   function modalHTML(w) {
     var tags = (w.genre || []).map(function (g) { return '<span class="tag">' + esc(g) + "</span>"; }).join("");
@@ -444,10 +432,9 @@
           (w._audioRawUrl ? '<source src="' + esc(w._audioRawUrl) + '" />' : "") +
         "</audio>"
       : '<p class="no-audio">暂无音频，可点击“编辑”上传 MP3/WAV。</p>';
-    var hasToken = !!state.settings.token;
-    var actions = hasToken
+    var actions = state.settings.token
       ? '<div class="modal-actions"><button class="btn btn-primary btn-sm" data-act="edit">✎ 编辑作品</button><button class="btn btn-danger btn-sm" data-act="delete">删除作品</button></div>'
-      : '<p class="modal-tip">浏览模式：配置 GitHub 令牌后可编辑或删除作品。</p>';
+      : "";
     return (
       '<div class="modal-cover">' +
         '<img src="' + w._coverUrl + '" data-fb="' + esc(w._coverRawUrl || "") + '" alt="' + esc(w.title) + ' 封面" />' +
@@ -464,12 +451,12 @@
         (w.desc ? '<p class="modal-desc">' + esc(w.desc) + "</p>" : "") +
         audio +
         '<div class="modal-facts">' +
+          "<span>点击：<b>" + fmt(state.plays[w.id] || 0) + " 次</b></span>" +
           "<span>年份：<b>" + (w.year || "—") + "</b></span>" +
           "<span>时长：<b>" + (w.duration || "—") + "</b></span>" +
           "<span>更新：<b>" + new Date(w.updatedAt || w.createdAt || Date.now()).toLocaleDateString("zh-CN") + "</b></span>" +
         "</div>" +
         actions +
-        '<p class="modal-tip">* 音频与封面公开存储在 GitHub 仓库中，任何访客均可播放。</p>' +
       "</div>"
     );
   }
@@ -478,6 +465,10 @@
     var w = byId(id);
     if (!w) return;
     state.modalId = id;
+    state.plays[id] = (state.plays[id] || 0) + 1;
+    savePlays();
+    var foot = document.querySelector('.song-card[data-id="' + id + '"] .card-plays');
+    if (foot) foot.textContent = "▶ 点击 " + fmt(state.plays[id]);
     els.modalBody.innerHTML = modalHTML(decorate(w));
     els.backdrop.hidden = false;
     document.body.style.overflow = "hidden";
@@ -772,29 +763,6 @@
       btn.classList.toggle("on", state.likes[id]);
       btn.textContent = state.likes[id] ? "♥" : "♡";
     }
-    renderStats();
-  }
-
-  /* ---------- 装饰动画 ---------- */
-  function initHeroDecor() {
-    var eq = document.getElementById("heroEq");
-    var notes = document.getElementById("floatNotes");
-    var bars = "";
-    for (var i = 0; i < 26; i++) {
-      var h = 40 + Math.round(Math.random() * 80);
-      bars += '<i style="height:' + h + "px;animation-duration:" + (0.9 + Math.random() * 0.8).toFixed(2) + "s;animation-delay:-" + (Math.random() * 1.2).toFixed(2) + 's"></i>';
-    }
-    eq.innerHTML = bars;
-
-    var chars = ["♪", "♫", "♬", "♩", "♪", "♫", "♬", "♩"];
-    var html = "";
-    for (var j = 0; j < chars.length; j++) {
-      var left = 6 + Math.random() * 88;
-      var size = 15 + Math.random() * 18;
-      var dur = 12 + Math.random() * 12;
-      html += '<span style="left:' + left + "vw;font-size:" + size.toFixed(1) + "px;animation-duration:" + dur.toFixed(1) + "s;animation-delay:-" + (Math.random() * 12).toFixed(1) + 's">' + chars[j] + "</span>";
-    }
-    notes.innerHTML = html;
   }
 
   function initReveal() {
@@ -819,14 +787,12 @@
     state.works.forEach(decorate);
     renderChips();
     renderGrid();
-    renderStats();
   }
 
   function init() {
     if (!els.grid) return;
     buildEditorList();
     bindEvents();
-    initHeroDecor();
     initReveal();
     refresh();
   }

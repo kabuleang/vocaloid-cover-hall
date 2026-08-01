@@ -1084,3 +1084,56 @@ img { display: block; max-width: 100%; }
   .file-row { grid-template-columns: 1fr; }
   .form-wrap { padding: 24px 20px; }
 }
+
+/* ---------- 快捷入口 ---------- */
+.quick { padding: 10px 0 44px; }
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.quick-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 28px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+  text-align: center;
+  cursor: pointer;
+  font-family: inherit;
+  color: var(--text);
+  transition: transform 0.25s, border-color 0.25s, background 0.25s;
+}
+
+.quick-block:hover {
+  transform: translateY(-4px);
+  border-color: var(--blue);
+  background: var(--panel-strong);
+}
+
+.quick-icon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: var(--grad);
+  color: #06121f;
+  font-size: 22px;
+  font-weight: 800;
+}
+
+.quick-block h3 { font-size: 17px; letter-spacing: 2px; }
+.quick-block p { color: var(--muted); font-size: 13px; }
+
+@media (max-width: 560px) {
+  .quick-grid { grid-template-columns: 1fr; }
+}
