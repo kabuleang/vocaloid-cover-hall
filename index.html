@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>声之回响 · 虚拟歌姬翻唱作品展示平台</title>
+  <meta name="description" content="声之回响 —— 一个展示虚拟歌姬翻唱作品的平台，汇集洛天依、乐正绫、言和、初音未来等虚拟歌姬的优秀翻唱作品。" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='72' font-size='70' text-anchor='middle'%3E%F0%9F%8E%B6%3C/text%3E%3C/svg%3E" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- 背景装饰 -->
+  <div class="aurora" aria-hidden="true">
+    <span class="blob b1"></span>
+    <span class="blob b2"></span>
+    <span class="blob b3"></span>
+  </div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="site-header" id="siteHeader">
+    <nav class="nav container">
+      <a class="brand" href="#top">
+        <span class="brand-mark">♪</span>
+        <span class="brand-text">声之回响<small>VOCALOID COVER HALL</small></span>
+      </a>
+      <button class="nav-toggle" id="navToggle" aria-label="打开菜单" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#top">首页</a></li>
+        <li><a href="#works">作品</a></li>
+        <li><a href="#about">关于</a></li>
+        <li><a class="nav-cta" href="#works">去听歌</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main id="top">
+    <!-- 首屏 -->
+    <section class="hero">
+      <div class="hero-inner container">
+        <p class="hero-eyebrow"><span class="dot"></span>虚拟歌姬翻唱 · 音乐同好聚集地</p>
+        <h1 class="hero-title">让每一首翻唱<br /><span class="grad">都有回响</span></h1>
+        <p class="hero-sub">这里收集了来自洛天依、乐正绫、言和、初音未来等虚拟歌姬的优质翻唱作品——听歌、收藏、分享，与同好一起见证声音的无限可能。</p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="#works">浏览作品</a>
+          <a class="btn btn-ghost" href="#about">了解平台</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b data-stat="songs">0</b><span>收录作品</span></div>
+          <div class="stat"><b data-stat="singers">0</b><span>虚拟歌姬</span></div>
+          <div class="stat"><b data-stat="genres">0</b><span>音乐风格</span></div>
+          <div class="stat"><b data-stat="plays">0</b><span>累计播放</span></div>
+        </div>
+      </div>
+      <div class="hero-eq" id="heroEq" aria-hidden="true"></div>
+      <div class="float-notes" id="floatNotes" aria-hidden="true"></div>
+    </section>
+
+    <!-- 作品展厅 -->
+    <section class="works section" id="works">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2>作品展厅</h2>
+          <p>浏览并收藏你喜欢的翻唱作品，点击卡片查看详情与收听入口。</p>
+        </div>
+
+        <div class="toolbar reveal">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+            <input id="searchInput" type="search" placeholder="搜索作品名、原曲或歌姬…" autocomplete="off" />
+          </div>
+          <select id="sortSelect" aria-label="排序方式">
+            <option value="latest">最新发布</option>
+            <option value="popular">播放最多</option>
+            <option value="liked">收藏最多</option>
+          </select>
+        </div>
+
+        <div class="chip-row reveal" id="singerChips" aria-label="按歌姬筛选"></div>
+        <div class="chip-row reveal" id="genreChips" aria-label="按曲风筛选"></div>
+        <p class="result-count reveal" id="resultCount"></p>
+
+        <div class="song-grid" id="songGrid"></div>
+
+        <div class="empty" id="emptyState" hidden>
+          <p class="empty-icon">♩</p>
+          <h3>没有找到匹配的作品</h3>
+          <p>换个关键词或筛选条件试试吧。</p>
+          <button class="btn btn-ghost" id="resetBtn">重置筛选</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 关于平台 -->
+    <section class="about section" id="about">
+      <div class="container">
+        <div class="section-head reveal">
+          <h2>关于平台</h2>
+          <p>声之回响是一个以虚拟歌姬翻唱作品为核心的展示与交流空间。</p>
+        </div>
+        <div class="about-grid">
+          <article class="about-card reveal">
+            <span class="about-icon">♪</span>
+            <h3>精选作品</h3>
+            <p>收录不同虚拟歌姬、不同曲风的优质翻唱，用统一的卡片形式集中展示，方便发现与收藏。</p>
+          </article>
+          <article class="about-card reveal">
+            <span class="about-icon">♬</span>
+            <h3>一键收听</h3>
+            <p>每首作品都提供 B 站、网易云、YouTube 等平台的搜索入口，点击即可前往原视频/音频收听。</p>
+          </article>
+          <article class="about-card reveal">
+            <span class="about-icon">✎</span>
+            <h3>开放投稿</h3>
+            <p>作品数据存放在纯静态的 data.js 文件中，任何会一点前端的朋友都能轻松添加新作品、参与共建。</p>
+          </article>
+        </div>
+        <div class="about-note reveal">
+          <p><strong>版权声明：</strong>本平台仅用于虚拟歌姬翻唱作品的展示与交流。所有作品版权归原作者、词曲作者及制作人所有，本平台不存储任何音频/视频文件，仅提供外部平台的搜索入口。若您是版权方并希望下架某作品，请与我们联系。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p class="foot-brand">♪ 声之回响</p>
+      <p>用代码让虚拟歌姬的歌声被更多人听见。</p>
+      <p class="foot-links">
+        <a href="#top">回到顶部</a>
+        <span>·</span>
+        <a href="https://github.com" target="_blank" rel="noopener">GitHub</a>
+      </p>
+      <p class="foot-copy">© 2026 声之回响 · 虚拟歌姬翻唱作品展示平台</p>
+    </div>
+  </footer>
+
+  <!-- 作品详情弹窗 -->
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="关闭弹窗">✕</button>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
