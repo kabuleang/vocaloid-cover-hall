@@ -1114,7 +1114,8 @@ img { display: block; max-width: 100%; }
 }
 
 /* ---------- 快捷入口 ---------- */
-.quick { padding: 10px 0 44px; }
+.works.section { padding-bottom: 40px; }
+.quick { padding: 0 0 44px; }
 
 .quick-grid {
   display: grid;
