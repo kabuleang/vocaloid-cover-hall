@@ -193,6 +193,9 @@
   function rawUrl(path) {
     return RAW_BASE + "/" + state.settings.owner + "/" + state.settings.repo + "/main/" + path;
   }
+  function pagesUrl(path) {
+    return "https://" + state.settings.owner + ".github.io/" + state.settings.repo + "/" + path;
+  }
 
   async function getWorksFile() {
     var r = await fetch(contentsUrl(WORKS_PATH), { headers: apiHeaders() });
@@ -316,7 +319,8 @@
     var e = editorInfo(work.editor);
     work._editor = e;
     work._coverUrl = work.cover ? rawUrl(work.cover) : coverArt(work);
-    work._audioUrl = work.audio ? rawUrl(work.audio) : null;
+    work._audioUrl = work.audio ? pagesUrl(work.audio) : null;
+    work._audioRawUrl = work.audio ? rawUrl(work.audio) : null;
     return work;
   }
 
@@ -434,7 +438,10 @@
   function modalHTML(w) {
     var tags = (w.genre || []).map(function (g) { return '<span class="tag">' + esc(g) + "</span>"; }).join("");
     var audio = w._audioUrl
-      ? '<audio class="modal-audio" controls preload="metadata" src="' + esc(w._audioUrl) + '"></audio>'
+      ? '<audio class="modal-audio" controls preload="metadata">' +
+          '<source src="' + esc(w._audioUrl) + '" />' +
+          (w._audioRawUrl ? '<source src="' + esc(w._audioRawUrl) + '" />' : "") +
+        "</audio>"
       : '<p class="no-audio">暂无音频，可点击“编辑”上传 MP3/WAV。</p>';
     var hasToken = !!state.settings.token;
     var actions = hasToken
