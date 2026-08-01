@@ -28,6 +28,25 @@ body {
   overflow-x: hidden;
 }
 
+/* ---------- 背景视频 ---------- */
+.bg-video {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(1.14) saturate(1.05);
+}
+
+.bg-veil {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.18) 45%, rgba(255, 255, 255, 0.10));
+}
+
 [hidden] { display: none !important; }
 
 a { color: inherit; text-decoration: none; }
@@ -207,6 +226,15 @@ img { display: block; max-width: 100%; }
   color: var(--cyan);
   font-size: 13px;
   letter-spacing: 1px;
+}
+
+.hero-title,
+.hero-eyebrow {
+  text-shadow: 0 2px 22px rgba(4, 7, 16, 0.7);
+}
+
+.hero-sub {
+  text-shadow: 0 2px 16px rgba(4, 7, 16, 0.75);
 }
 
 .dot {

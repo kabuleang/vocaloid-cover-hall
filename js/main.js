@@ -71,6 +71,9 @@
     navToggle: document.getElementById("navToggle"),
     navLinks: document.getElementById("navLinks"),
     navSettingsBtn: document.getElementById("navSettingsBtn"),
+    bgVideo: document.getElementById("bgVideo"),
+    videoToggle: document.getElementById("videoToggle"),
+    soundToggle: document.getElementById("soundToggle"),
     toast: document.getElementById("toast")
   };
 
@@ -619,6 +622,38 @@
 
   /* ---------- 事件绑定 ---------- */
   function bindEvents() {
+    function updateVideoControls() {
+      var v = els.bgVideo;
+      if (!v) return;
+      els.videoToggle.textContent = v.paused ? "▶" : "⏸";
+      els.soundToggle.textContent = v.muted ? "🔇" : "🔊";
+    }
+    function muteVideo() {
+      if (els.bgVideo && !els.bgVideo.muted) {
+        els.bgVideo.muted = true;
+        updateVideoControls();
+      }
+    }
+
+    if (els.bgVideo) {
+      els.videoToggle.addEventListener("click", function () {
+        if (els.bgVideo.paused) els.bgVideo.play().catch(function () { /* ignore */ });
+        else els.bgVideo.pause();
+        updateVideoControls();
+      });
+      els.soundToggle.addEventListener("click", function () {
+        els.bgVideo.muted = !els.bgVideo.muted;
+        updateVideoControls();
+      });
+      els.bgVideo.addEventListener("play", updateVideoControls);
+      els.bgVideo.addEventListener("pause", updateVideoControls);
+      // 作品音频开始播放时，自动静音背景视频
+      document.addEventListener("play", function (e) {
+        if (e.target && e.target.tagName === "AUDIO") muteVideo();
+      }, true);
+      updateVideoControls();
+    }
+
     els.search.addEventListener("input", function () { state.query = els.search.value; renderGrid(); });
     els.sort.addEventListener("change", function () { state.sort = els.sort.value; renderGrid(); });
 

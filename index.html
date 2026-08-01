@@ -10,6 +10,12 @@
 </head>
 <body>
 
+  <!-- 背景视频 -->
+  <video id="bgVideo" class="bg-video" autoplay muted loop playsinline preload="auto" aria-hidden="true">
+    <source src="assets/bg-video.mp4" type="video/mp4" />
+  </video>
+  <div class="bg-veil" aria-hidden="true"></div>
+
   <!-- 背景装饰 -->
   <div class="aurora" aria-hidden="true">
     <span class="blob b1"></span>
@@ -31,6 +37,8 @@
         <li><a href="#top">首页</a></li>
         <li><a href="#works">作品</a></li>
         <li><a href="#about">关于</a></li>
+        <li><button class="icon-btn" id="videoToggle" aria-label="暂停或播放背景视频" title="暂停 / 播放">⏸</button></li>
+        <li><button class="icon-btn" id="soundToggle" aria-label="背景视频声音开关" title="声音">🔇</button></li>
         <li><button class="icon-btn nav-settings" id="navSettingsBtn" aria-label="设置" title="仓库与令牌设置">⚙</button></li>
         <li><a class="nav-cta upload-btn" href="#works">＋ 上传作品</a></li>
       </ul>
