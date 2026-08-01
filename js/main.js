@@ -318,7 +318,8 @@
   function decorate(work) {
     var e = editorInfo(work.editor);
     work._editor = e;
-    work._coverUrl = work.cover ? rawUrl(work.cover) : coverArt(work);
+    work._coverUrl = work.cover ? pagesUrl(work.cover) : coverArt(work);
+    work._coverRawUrl = work.cover ? rawUrl(work.cover) : null;
     work._audioUrl = work.audio ? pagesUrl(work.audio) : null;
     work._audioRawUrl = work.audio ? rawUrl(work.audio) : null;
     return work;
@@ -330,7 +331,7 @@
     return (
       '<article class="song-card" data-id="' + esc(w.id) + '" tabindex="0" role="button" aria-label="查看作品 ' + esc(w.title) + ' 详情">' +
         '<div class="card-cover">' +
-          '<img src="' + w._coverUrl + '" alt="' + esc(w.title) + ' 封面" loading="lazy" />' +
+          '<img src="' + w._coverUrl + '" data-fb="' + esc(w._coverRawUrl || "") + '" alt="' + esc(w.title) + ' 封面" loading="lazy" />' +
           (w.duration ? '<span class="card-duration">' + esc(w.duration) + "</span>" : "") +
           '<button class="card-like' + (liked ? " on" : "") + '" data-like="' + esc(w.id) + '" aria-label="收藏 ' + esc(w.title) + '">' + (liked ? "♥" : "♡") + "</button>" +
           '<div class="card-hover"><button class="card-play">▶ 查看详情</button></div>' +
@@ -449,7 +450,7 @@
       : '<p class="modal-tip">浏览模式：配置 GitHub 令牌后可编辑或删除作品。</p>';
     return (
       '<div class="modal-cover">' +
-        '<img src="' + w._coverUrl + '" alt="' + esc(w.title) + ' 封面" />' +
+        '<img src="' + w._coverUrl + '" data-fb="' + esc(w._coverRawUrl || "") + '" alt="' + esc(w.title) + ' 封面" />' +
         (w.duration ? '<span class="modal-duration">' + esc(w.duration) + "</span>" : "") +
       "</div>" +
       '<div class="modal-info">' +
@@ -753,6 +754,14 @@
     window.addEventListener("scroll", function () {
       els.header.classList.toggle("scrolled", window.scrollY > 10);
     }, { passive: true });
+
+    // 图片加载失败时回退到 raw 地址（例如 GitHub Pages 尚未同步或网络异常）
+    document.addEventListener("error", function (e) {
+      var img = e.target;
+      if (img && img.tagName === "IMG" && img.dataset && img.dataset.fb && img.src !== img.dataset.fb) {
+        img.src = img.dataset.fb;
+      }
+    }, true);
   }
 
   function toggleLike(id) {
