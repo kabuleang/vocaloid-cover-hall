@@ -7,6 +7,7 @@
   var LIKE_KEY = "vsong_likes_v2";
   var MAX_COVER_FILE = 25 * 1024 * 1024;  // 封面 ≤ 25MB
   var MAX_AUDIO_FILE = 100 * 1024 * 1024; // 音频 ≤ 100MB
+  var WARN_AUDIO_FILE = 50 * 1024 * 1024; // 超过 50MB 提前警告（GitHub 实际处理大文件不稳定）
   var RAW_BASE = "https://raw.githubusercontent.com";
   var API_BASE = "https://api.github.com";
   var WORKS_PATH = "works/works.json";
@@ -536,6 +537,14 @@
     return "";
   }
 
+  function friendlyUploadError(ex) {
+    var m = ex.message || "";
+    if (/too large|422|input too large/i.test(m)) {
+      return "GitHub 拒绝了该文件（过大无法处理）。请把音频转成 MP3（同音质下体积小数倍）或压缩后重试。";
+    }
+    return m;
+  }
+
   async function onSubmit(e) {
     e.preventDefault();
     var title = els.fTitle.value.trim();
@@ -571,7 +580,7 @@
       await refresh();
       openModal(saved.id);
     } catch (ex) {
-      setTip(ex.message || "上传失败，请重试");
+      setTip(friendlyUploadError(ex) || "上传失败，请重试");
     } finally {
       els.formSubmit.disabled = false;
     }
@@ -712,7 +721,12 @@
     });
     els.fAudio.addEventListener("change", function () {
       var f = els.fAudio.files[0];
-      els.audioText.textContent = f ? "已选择：" + f.name + (f.size > MAX_AUDIO_FILE ? "（超过 100MB！）" : "") : "上传音频（MP3 / WAV）";
+      var note = "";
+      if (f) {
+        if (f.size > MAX_AUDIO_FILE) note = "（超过 100MB！）";
+        else if (f.size > WARN_AUDIO_FILE) note = "（较大文件，GitHub 可能拒绝，建议转 MP3）";
+      }
+      els.audioText.textContent = f ? "已选择：" + f.name + note : "上传音频（MP3 / WAV）";
       els.audioText.parentElement.classList.toggle("has-file", !!f);
     });
 
